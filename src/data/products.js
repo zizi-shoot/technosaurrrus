@@ -1,3 +1,5 @@
+import { nanoid } from 'nanoid';
+
 export const products = [
   { title: 'Varmilo VEA87 Vintage Days', price: '17 490', image: '/img/vintage-days.jpeg' },
   { title: 'Varmilo VEA87 Panda R2', price: '17 990', image: '/img/panda-r2.jpeg' },
@@ -11,4 +13,7 @@ export const products = [
   { title: 'Ducky One 2 RGB TKL', price: '14 890', image: '/img/one-2-b.jpeg' },
   { title: 'Ducky One 2 RGB TKL White', price: '14 890', image: '/img/one-2-w.jpeg' },
   { title: 'Varmilo VEA87 Summit R2', price: '18 990', image: '/img/summit-r2.jpeg' },
-];
+].map((item) => ({
+  ...item,
+  id: nanoid(6),
+}));
