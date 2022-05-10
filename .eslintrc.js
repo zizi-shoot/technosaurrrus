@@ -24,7 +24,7 @@ module.exports = {
         ignoreRegExpLiterals: true,
         ignoreStrings: true,
         ignoreTemplateLiterals: true,
-        ignorePattern: '\\s<\\w+>.*<\\/\\w+>$',
+        ignorePattern: '\\s<.+>.*</.+>',
       },
     ],
     'vuejs-accessibility/label-has-for': [
