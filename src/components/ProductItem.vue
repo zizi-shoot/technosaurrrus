@@ -1,12 +1,12 @@
 <template>
   <li class="catalog__item">
-    <a class="catalog__pic" href="#">
+    <a class="catalog__pic" href="#" @click.prevent="goToPage( 'product', {id: product.id})">
       <img :alt="product.title" :src="product.image">
     </a>
     <h3 class="catalog__title">
       <a href="#">{{ product.title }}</a>
     </h3>
-    <span class="catalog__price">{{ gapSeparatedPrice }} ₽</span>
+    <span class="catalog__price">{{ product.price | formatNumber }} ₽</span>
     <ul class="colors colors--black">
       <li class="colors__item">
         <label class="colors__label">
@@ -31,6 +31,8 @@
 </template>
 
 <script>
+import { goToPage } from '@/helpers/goToPage';
+import { formatNumber } from '@/helpers/formatNumber';
 
 export default {
   data() {
@@ -39,10 +41,12 @@ export default {
     };
   },
   props: ['product'],
-  computed: {
-    gapSeparatedPrice() {
-      return this.product.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
-    },
+  methods: {
+    goToPage,
+    separatePrice: formatNumber,
+  },
+  filters: {
+    formatNumber,
   },
 };
 </script>
