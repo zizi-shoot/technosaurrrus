@@ -31,8 +31,7 @@
 </template>
 
 <script>
-import { goToPage } from '@/helpers/goToPage';
-import { formatNumber } from '@/helpers/formatNumber';
+import { formatNumber } from '@/helpers';
 
 export default {
   data() {
@@ -41,10 +40,6 @@ export default {
     };
   },
   props: ['product'],
-  methods: {
-    goToPage,
-    separatePrice: formatNumber,
-  },
   filters: {
     formatNumber,
   },

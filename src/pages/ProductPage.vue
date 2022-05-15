@@ -90,25 +90,8 @@
             </fieldset>
 
             <div class="item__row">
-              <div class="form__counter">
-                <button aria-label="Убрать один товар" type="button">
-                  <svg fill="currentColor" height="12" width="12">
-                    <use xlink:href="#icon-minus"></use>
-                  </svg>
-                </button>
-                <!--eslint-disable-next-line-->
-                <input v-model.number="productAmount" type="text">
-
-                <button aria-label="Добавить один товар" type="button">
-                  <svg fill="currentColor" height="12" width="12">
-                    <use xlink:href="#icon-plus"></use>
-                  </svg>
-                </button>
-              </div>
-
-              <button class="button button--primary" type="submit">
-                В корзину
-              </button>
+              <BaseCounter :amount.sync="productAmount" />
+              <button class="button button--primary" type="submit">В корзину</button>
             </div>
           </form>
         </div>
@@ -166,9 +149,11 @@
 <script>
 import { products } from '@/data/products';
 import { categories } from '@/data/categories';
-import { formatNumber } from '@/helpers/formatNumber';
+import { formatNumber } from '@/helpers';
+import BaseCounter from '@/components/BaseCounter.vue';
 
 export default {
+  components: { BaseCounter },
   data() {
     return {
       productAmount: 1,
