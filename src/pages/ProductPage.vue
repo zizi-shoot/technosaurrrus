@@ -27,7 +27,7 @@
           {{ product.title }}
         </h2>
         <div class="item__form">
-          <form action="#" class="form" method="POST">
+          <form class="form" @submit.prevent="addToCart">
             <b class="item__price">
               {{ product.price | formatNumber }} ₽
             </b>
@@ -61,7 +61,7 @@
             <fieldset class="form__block">
               <legend class="form__legend">Объемб в ГБ:</legend>
 
-              <ul class="sizes sizes--primery">
+              <ul class="sizes sizes--primary">
                 <li class="sizes__item">
                   <label class="sizes__label">
                     <input class="sizes__radio sr-only" name="sizes-item" type="radio" value="32">
@@ -97,7 +97,7 @@
                   </svg>
                 </button>
                 <!--eslint-disable-next-line-->
-                <input name="count" type="text" value="1">
+                <input v-model.number="productAmount" type="text">
 
                 <button aria-label="Добавить один товар" type="button">
                   <svg fill="currentColor" height="12" width="12">
@@ -106,7 +106,7 @@
                 </button>
               </div>
 
-              <button class="button button--primery" type="submit">
+              <button class="button button--primary" type="submit">
                 В корзину
               </button>
             </div>
@@ -166,10 +166,14 @@
 <script>
 import { products } from '@/data/products';
 import { categories } from '@/data/categories';
-import { goToPage } from '@/helpers/goToPage';
 import { formatNumber } from '@/helpers/formatNumber';
 
 export default {
+  data() {
+    return {
+      productAmount: 1,
+    };
+  },
   computed: {
     product() {
       return products.find((product) => product.id === this.$route.params.id);
@@ -179,7 +183,12 @@ export default {
     },
   },
   methods: {
-    goToPage,
+    addToCart() {
+      this.$store.commit(
+        'addProductToCart',
+        { productId: this.product.id, amount: this.productAmount },
+      );
+    },
   },
   filters: {
     formatNumber,
