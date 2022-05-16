@@ -1,7 +1,6 @@
-import { nanoid } from 'nanoid';
-
 export const products = [
   {
+    id: 'u_btff',
     categoryId: 3,
     title: 'Varmilo VEA87 Vintage Days',
     price: 17490,
@@ -9,6 +8,7 @@ export const products = [
     color: 'multi',
   },
   {
+    id: 'ZiDbuW',
     categoryId: 3,
     title: 'Varmilo VEA87 Panda R2',
     price: 17990,
@@ -16,6 +16,7 @@ export const products = [
     color: 'green',
   },
   {
+    id: 'ghiH0-',
     categoryId: 3,
     title: 'Varmilo VEA87 Moonlight',
     price: 17490,
@@ -23,6 +24,7 @@ export const products = [
     color: 'blue',
   },
   {
+    id: 'KvSX0a',
     categoryId: 3,
     title: 'Varmilo VEA87 Sakura',
     price: 17490,
@@ -30,6 +32,7 @@ export const products = [
     color: 'red',
   },
   {
+    id: 'g_OfhI',
     categoryId: 2,
     title: 'Leopold FC750R PD White Blue Star',
     price: 12990,
@@ -37,55 +40,11 @@ export const products = [
     color: 'red',
   },
   {
+    id: 'B2F7VK',
     categoryId: 2,
     title: 'Leopold FC750R PD White/Mint',
     price: 12290,
     image: '/img/white-mint.jpeg',
     color: 'blue',
   },
-  {
-    categoryId: 4,
-    title: 'Vortex Race III RGB Type-C',
-    price: 17890,
-    image: '/img/race-3.jpeg',
-    color: 'multi',
-  },
-  {
-    categoryId: 3,
-    title: 'Varmilo VEA87 Koi',
-    price: 20690,
-    image: '/img/koi.jpeg',
-    color: 'red',
-  },
-  {
-    categoryId: 2,
-    title: 'Leopold FC750R BT Grey',
-    price: 15390,
-    image: '/img/bt-grey.jpeg',
-    color: 'black',
-  },
-  {
-    categoryId: 1,
-    title: 'Ducky One 2 RGB TKL',
-    price: 14890,
-    image: '/img/one-2-b.jpeg',
-    color: 'black',
-  },
-  {
-    categoryId: 1,
-    title: 'Ducky One 2 RGB TKL White',
-    price: 14890,
-    image: '/img/one-2-w.jpeg',
-    color: 'white',
-  },
-  {
-    categoryId: 3,
-    title: 'Varmilo VEA87 Summit R2',
-    price: 18990,
-    image: '/img/summit-r2.jpeg',
-    color: 'blue',
-  },
-].map((item) => ({
-  ...item,
-  id: nanoid(6),
-}));
+];
