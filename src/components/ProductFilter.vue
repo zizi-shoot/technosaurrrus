@@ -43,66 +43,6 @@
         </ul>
       </fieldset>
 
-      <fieldset class="form__block">
-        <legend class="form__legend">Объем в ГБ</legend>
-        <ul class="check-list">
-          <li class="check-list__item">
-            <label class="check-list__label">
-              <input checked="" class="check-list__check sr-only" name="volume" type="checkbox" value="8">
-              <span class="check-list__desc">
-                    8
-                    <span>(313)</span>
-                  </span>
-            </label>
-          </li>
-          <li class="check-list__item">
-            <label class="check-list__label">
-              <input class="check-list__check sr-only" name="volume" type="checkbox" value="16">
-              <span class="check-list__desc">
-                    16
-                    <span>(461)</span>
-                  </span>
-            </label>
-          </li>
-          <li class="check-list__item">
-            <label class="check-list__label">
-              <input class="check-list__check sr-only" name="volume" type="checkbox" value="32">
-              <span class="check-list__desc">
-                    32
-                    <span>(313)</span>
-                  </span>
-            </label>
-          </li>
-          <li class="check-list__item">
-            <label class="check-list__label">
-              <input class="check-list__check sr-only" name="volume" type="checkbox" value="64">
-              <span class="check-list__desc">
-                    64
-                    <span>(313)</span>
-                  </span>
-            </label>
-          </li>
-          <li class="check-list__item">
-            <label class="check-list__label">
-              <input class="check-list__check sr-only" name="volume" type="checkbox" value="128">
-              <span class="check-list__desc">
-                    128
-                    <span>(313)</span>
-                  </span>
-            </label>
-          </li>
-          <li class="check-list__item">
-            <label class="check-list__label">
-              <input class="check-list__check sr-only" name="volume" type="checkbox" value="264">
-              <span class="check-list__desc">
-                    264
-                    <span>(313)</span>
-                  </span>
-            </label>
-          </li>
-        </ul>
-      </fieldset>
-
       <button class="filter__submit button button--primary" type="submit">
         Применить
       </button>
