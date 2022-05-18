@@ -7,6 +7,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     cartProducts: [],
+    API_URL: 'https://vue-study.skillbox.cc/api',
   },
   mutations: {
     addProductToCart(state, { productId, amount }) {
