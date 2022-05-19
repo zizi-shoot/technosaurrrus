@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="page-container">
     <header class="header">
       <div class="header__wrapper container">
         <span class="header__info">Каталог</span>
@@ -116,3 +116,11 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.page-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+</style>
