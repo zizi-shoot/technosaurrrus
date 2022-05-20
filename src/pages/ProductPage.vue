@@ -38,26 +38,14 @@
               <fieldset class="form__block">
                 <legend class="form__legend">Цвет:</legend>
                 <ul class="colors">
-                  <li class="colors__item">
+                  <li v-for="color in product.colors" :key="color.id" class="colors__item">
                     <label class="colors__label">
-                      <input checked="" class="colors__radio sr-only" name="color-item" type="radio" value="blue">
-                      <span class="colors__value" style="background-color: #73b6ea;">
+                      <input v-model="colorValue" :value="color.id" class="colors__radio sr-only" type="radio">
+                      <span :style="{backgroundColor: color.code}" class="colors__value">
                     </span>
                     </label>
                   </li>
-                  <li class="colors__item">
-                    <label class="colors__label">
-                      <input class="colors__radio sr-only" name="color-item" type="radio" value="yellow">
-                      <span class="colors__value" style="background-color: #ffbe15;">
-                    </span>
-                    </label>
-                  </li>
-                  <li class="colors__item">
-                    <label class="colors__label">
-                      <input class="colors__radio sr-only" name="color-item" type="radio" value="gray">
-                      <span class="colors__value" style="background-color: #939393;">
-                  </span></label>
-                  </li>
+
                 </ul>
               </fieldset>
 
@@ -146,17 +134,26 @@ export default {
       hasErrorLoading: false,
       isProductAdded: false,
       isProductAddSending: false,
+      colorValue: null,
     };
   },
   computed: {
     product() {
       return {
         ...this.productData,
-        image: this.productData.image.file.url,
+        image: this.productData?.image.file.url,
       };
     },
     category() {
       return this.productData.category;
+    },
+    color: {
+      get() {
+        return this.colorValue;
+      },
+      set(value) {
+        this.colorValue = value;
+      },
     },
   },
   methods: {
@@ -183,6 +180,7 @@ export default {
       try {
         const { data } = await axios.get(`${API_URL}/products/${this.$route.params.id}`);
         this.productData = data;
+        this.colorValue = data.colors[0].id;
       } catch (error) {
         this.hasErrorLoading = true;
       } finally {
@@ -234,10 +232,10 @@ export default {
   justify-content: center;
   width: 40px;
   height: 40px;
+  margin: 0 auto 6px;
   border-radius: 50%;
   font-size: 24px;
   color: #272727;
   background-color: #9eff00;
-  margin: 0 auto 6px;
 }
 </style>
