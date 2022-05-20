@@ -95,7 +95,7 @@ export default {
         } finally {
           this.isProductLoading = false;
         }
-      }, 0);
+      }, 1000);
     },
   },
   watch: {

@@ -21,7 +21,8 @@
       type="button"
       @click="deleteProduct(item.productId)"
     >
-      <svg fill="currentColor" height="20" width="20">
+      <BasePreloader class="button-del__loader" v-if="isProductDeleting" />
+      <svg v-else fill="currentColor" height="20" width="20">
         <use xlink:href="#icon-close"></use>
       </svg>
     </button>
@@ -30,13 +31,19 @@
 
 <script>
 import { formatNumber } from '@/helpers';
-import { mapMutations } from 'vuex';
+import { mapActions } from 'vuex';
 import BaseCounter from '@/components/BaseCounter.vue';
+import BasePreloader from '@/components/BasePreloader.vue';
 
 export default {
-  components: { BaseCounter },
+  components: { BasePreloader, BaseCounter },
   props: ['item'],
   filters: { formatNumber },
+  data() {
+    return {
+      isProductDeleting: false,
+    };
+  },
   computed: {
     amount: {
       get() {
@@ -44,21 +51,34 @@ export default {
       },
 
       set(value) {
-        this.$store.commit(
-          'updateCartProductAmount',
-          { productId: this.item.productId, amount: value },
-        );
+        this.updateCartProductAmount({ productId: this.item.productId, amount: value });
       },
     },
   },
   methods: {
-    ...mapMutations({
-      deleteProduct: 'deleteCartProduct',
-    }),
+    ...mapActions(['updateCartProductAmount', 'deleteCartProduct']),
+
+    deleteProduct(productId) {
+      this.isProductDeleting = true;
+
+      this.deleteCartProduct(productId)
+        .then(() => {
+          this.isProductDeleting = false;
+        });
+    },
   },
 };
 </script>
 
 <style scoped>
+.button-del {
+  position: relative;
+  cursor: pointer;
+}
+
+.button-del__loader >>> svg {
+  width: 100%;
+  height: 100%;
+}
 
 </style>

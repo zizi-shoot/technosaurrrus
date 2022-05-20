@@ -61,41 +61,18 @@
                 </ul>
               </fieldset>
 
-              <fieldset class="form__block">
-                <legend class="form__legend">Объем в ГБ:</legend>
-
-                <ul class="sizes sizes--primary">
-                  <li class="sizes__item">
-                    <label class="sizes__label">
-                      <input class="sizes__radio sr-only" name="sizes-item" type="radio" value="32">
-                      <span class="sizes__value">
-                      32gb
-                    </span>
-                    </label>
-                  </li>
-                  <li class="sizes__item">
-                    <label class="sizes__label">
-                      <input class="sizes__radio sr-only" name="sizes-item" type="radio" value="64">
-                      <span class="sizes__value">
-                      64gb
-                    </span>
-                    </label>
-                  </li>
-                  <li class="sizes__item">
-                    <label class="sizes__label">
-                      <input checked="" class="sizes__radio sr-only" name="sizes-item" type="radio" value="128">
-                      <span class="sizes__value">
-                      128gb
-                    </span>
-                    </label>
-                  </li>
-                </ul>
-              </fieldset>
-
               <div class="item__row">
                 <BaseCounter :amount.sync="productAmount" />
-                <button class="button button--primary" type="submit">В корзину</button>
+                <button :disabled="isProductAddSending" class="button button--primary" type="submit">
+                  <BasePreloader v-if="isProductAddSending" class="button__loader" />
+                  <span v-else>В корзину</span>
+                </button>
+                <div v-show="isProductAdded" class="complete">
+                  <span class="complete__icon">✓</span>
+                  <span class="complete__descr">Добавлено</span>
+                </div>
               </div>
+
             </form>
           </div>
         </div>
@@ -151,12 +128,13 @@
 </template>
 
 <script>
-import { formatNumber } from '@/helpers';
+import { formatNumber, wait } from '@/helpers';
 import BaseCounter from '@/components/BaseCounter.vue';
 import axios from 'axios';
 import { API_URL } from '@/config';
 import BasePreloader from '@/components/BasePreloader.vue';
 import BaseErrorLoading from '@/components/BaseErrorLoading.vue';
+import { mapActions } from 'vuex';
 
 export default {
   components: { BaseErrorLoading, BasePreloader, BaseCounter },
@@ -166,6 +144,8 @@ export default {
       productData: null,
       isProductLoading: false,
       hasErrorLoading: false,
+      isProductAdded: false,
+      isProductAddSending: false,
     };
   },
   computed: {
@@ -180,15 +160,25 @@ export default {
     },
   },
   methods: {
+    ...mapActions(['addProductToCart']),
     addToCart() {
-      this.$store.commit(
-        'addProductToCart',
-        { productId: this.product.id, amount: this.productAmount },
-      );
+      this.isProductAdded = false;
+      this.isProductAddSending = true;
+      this.addProductToCart({ productId: this.product.id, amount: this.productAmount })
+        .then(() => {
+          this.isProductAdded = true;
+          this.isProductAddSending = false;
+
+          setTimeout(() => {
+            this.isProductAdded = false;
+          }, 2000);
+        });
     },
     async loadProduct() {
       this.isProductLoading = true;
       this.hasErrorLoading = false;
+
+      await wait(2000);
 
       try {
         const { data } = await axios.get(`${API_URL}/products/${this.$route.params.id}`);
@@ -217,5 +207,37 @@ export default {
 <style scoped>
 .content {
   position: relative;
+}
+
+.button {
+  position: relative;
+}
+
+.button__loader {
+  background-color: transparent;
+}
+
+.item__row {
+  position: relative;
+}
+
+.complete {
+  position: absolute;
+  top: 5px;
+  right: -20px;
+  text-align: center;
+}
+
+.complete__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 24px;
+  color: #272727;
+  background-color: #9eff00;
+  margin: 0 auto 6px;
 }
 </style>
