@@ -9,7 +9,8 @@
         <a class="header__tel" href="tel:8 800 600 90 09">
           8 800 600 90 09
         </a>
-        <CartIndicator />
+        <BasePreloader v-if="isCartLoading" class="header__loader" />
+        <CartIndicator v-else />
       </div>
     </header>
     <router-view />
@@ -109,10 +110,31 @@
 
 <script>
 import CartIndicator from '@/components/CartIndicator.vue';
+import { mapActions, mapMutations } from 'vuex';
+import BasePreloader from '@/components/BasePreloader.vue';
 
 export default {
+  computed: {
+    isCartLoading() {
+      return this.$store.state.isCartLoading;
+    },
+  },
   components: {
+    BasePreloader,
     CartIndicator,
+  },
+  methods: {
+    ...mapActions(['loadCart']),
+    ...mapMutations(['updateUserAccessKey']),
+  },
+  created() {
+    const userAccessKey = localStorage.getItem('userAccessKey');
+
+    if (userAccessKey) {
+      this.updateUserAccessKey(userAccessKey);
+    }
+
+    this.loadCart();
   },
 };
 </script>
@@ -122,5 +144,17 @@ export default {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+}
+
+.header__loader {
+  position: static;
+  width: 40px;
+  height: 27px;
+  background-color: transparent;
+}
+
+.header__loader >>> svg{
+  width: 27px;
+  height: 27px;
 }
 </style>

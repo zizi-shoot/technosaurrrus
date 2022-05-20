@@ -16,7 +16,10 @@
       <span class="content__info">{{ `${totalAmount} ${amountDeclension}` }}</span>
     </div>
 
-    <section class="cart">
+    <BasePreloader v-if="isCartLoading" />
+    <BaseErrorLoading v-else-if="hasErrorCartLoading" descr="Не удалось загрузить товары из корзины" @load-again="loadCart"/>
+
+    <section v-else class="cart">
       <form action="#" class="cart__form form" method="POST">
         <div class="cart__field">
           <ul class="cart__list">
@@ -26,7 +29,7 @@
 
         <div class="cart__block">
           <p class="cart__desc">
-            Мы&nbsp;посчитаем стоимость доставки на&nbsp;следующем этапе
+            Мы посчитаем стоимость доставки на следующем этапе
           </p>
           <p class="cart__price">Итого: <span>{{ totalPrice | formatNumber }} ₽</span></p>
 
@@ -40,12 +43,14 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 import CartItem from '@/components/CartItem.vue';
 import { calcDeclination, formatNumber } from '@/helpers';
+import BasePreloader from '@/components/BasePreloader.vue';
+import BaseErrorLoading from '@/components/BaseErrorLoading.vue';
 
 export default {
-  components: { CartItem },
+  components: { BaseErrorLoading, BasePreloader, CartItem },
   filters: { formatNumber },
   computed: {
     ...mapGetters({
@@ -53,13 +58,25 @@ export default {
       totalPrice: 'cartTotalPrice',
       totalAmount: 'cartTotalAmount',
     }),
+    isCartLoading() {
+      return this.$store.state.isCartLoading;
+    },
+
+    hasErrorCartLoading() {
+      return this.$store.state.hasErrorCartLoading;
+    },
     amountDeclension() {
       return calcDeclination(this.totalAmount, ['товар', 'товара', 'товаров']);
     },
+  },
+  methods: {
+    ...mapActions(['loadCart']),
   },
 };
 </script>
 
 <style scoped>
-
+.content {
+  position: relative;
+}
 </style>

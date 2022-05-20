@@ -5,10 +5,11 @@
         :alt="item.product.title"
         :src="item.product.image"
         height="120"
-        width="120">
+        width="120"
+      >
     </div>
     <h3 class="product__title">{{ item.product.title }}</h3>
-    <span class="product__code">{{ item.product.id }}</span>
+    <span class="product__code">Артикул: {{ item.product.id }}</span>
 
     <BaseCounter :amount.sync="amount" class="product__counter" />
 
