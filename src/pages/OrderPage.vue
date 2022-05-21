@@ -68,26 +68,17 @@
 
         <div class="cart__block">
           <ul class="cart__orders">
-            <li class="cart__order">
-              <h3>Смартфон Xiaomi Redmi Note 7 Pro 6/128GB</h3>
-              <b>18 990 ₽</b>
-              <span>Артикул: 150030</span>
-            </li>
-            <li class="cart__order">
-              <h3>Гироскутер Razor Hovertrax 2.0ii</h3>
-              <b>4 990 ₽</b>
-              <span>Артикул: 150030</span>
-            </li>
-            <li class="cart__order">
-              <h3>Электрический дрифт-карт Razor Lil’ Crazy</h3>
-              <b>8 990 ₽</b>
-              <span>Артикул: 150030</span>
+            <li v-for="product of orderProducts" :key="product.id" class="cart__order">
+              <h3>{{ product.title }}</h3>
+              <b>{{ product.price * product.quantity | formatNumber }} ₽</b>
+              <span>Артикул: {{ product.id }}</span>
             </li>
           </ul>
 
           <div class="cart__total">
             <p>Доставка: <b>500 ₽</b></p>
-            <p>Итого: <b>3</b> товара на сумму <b>37 970 ₽</b></p>
+            <p>Итого: <b>{{ totalAmount }}</b> {{ amountDeclension(totalAmount) }} на сумму
+              <b>{{ totalPrice | formatNumber }} ₽</b></p>
           </div>
 
           <button class="cart__button button button--primary" type="submit">
@@ -108,7 +99,8 @@ import BaseFormText from '@/components/Base/BaseFormText.vue';
 import BaseFormTextarea from '@/components/Base/BaseFormTextarea.vue';
 import { API_URL } from '@/config';
 import axios from 'axios';
-import { mapMutations } from 'vuex';
+import { mapGetters, mapMutations } from 'vuex';
+import { calcDeclination, formatNumber } from '@/helpers';
 
 export default {
   components: { BaseFormTextarea, BaseFormText },
@@ -119,8 +111,30 @@ export default {
       formErrorMessage: '',
     };
   },
+  computed: {
+    ...mapGetters({
+      totalPrice: 'cartTotalPrice',
+      totalAmount: 'cartTotalAmount',
+    }),
+    orderProducts() {
+      return this.$store.state.cartProductsData.map(({ quantity, product: { id, title, price } }) => ({
+        id,
+        title,
+        price,
+        quantity,
+      }));
+    },
+  },
+  filters: {
+    formatNumber,
+  },
   methods: {
     ...mapMutations(['resetCart']),
+
+    amountDeclension(value) {
+      return calcDeclination(value, ['товар', 'товара', 'товаров']);
+    },
+
     async order() {
       try {
         this.formError = {};
