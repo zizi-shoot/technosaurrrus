@@ -32,8 +32,8 @@
 <script>
 import { formatNumber } from '@/helpers';
 import { mapActions } from 'vuex';
-import BaseCounter from '@/components/BaseCounter.vue';
-import BasePreloader from '@/components/BasePreloader.vue';
+import BaseCounter from '@/components/Base/BaseCounter.vue';
+import BasePreloader from '@/components/Base/BasePreloader.vue';
 
 export default {
   components: { BasePreloader, BaseCounter },

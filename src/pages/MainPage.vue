@@ -26,12 +26,12 @@
 </template>
 
 <script>
-import BasePagination from '@/components/BasePagination.vue';
+import BasePagination from '@/components/Base/BasePagination.vue';
 import ProductList from '@/components/ProductList.vue';
 import ProductFilter from '@/components/ProductFilter.vue';
-import BasePreloader from '@/components/BasePreloader.vue';
-import BaseErrorLoading from '@/components/BaseErrorLoading.vue';
 import { loadProductsData } from '@/api/products';
+import BasePreloader from '@/components/Base/BasePreloader.vue';
+import BaseErrorLoading from '@/components/Base/BaseErrorLoading.vue';
 
 export default {
   data() {
