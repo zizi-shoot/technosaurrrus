@@ -16,9 +16,9 @@
         :price-to.sync="filterPriceTo"
       />
       <section class="catalog">
-        <ProductList
-          :products="products"
-        />
+        <BasePreloader v-if="isProductLoading" />
+        <BaseErrorLoading v-else-if="hasErrorLoading" descr="Произошла ошибка при загрузке товаров!" @load-again="loadProducts" />
+        <ProductList :products="products" />
         <BasePagination v-model="page" :count="countProducts" :per-page="productsPerPage" />
       </section>
     </div>
@@ -29,7 +29,9 @@
 import BasePagination from '@/components/BasePagination.vue';
 import ProductList from '@/components/ProductList.vue';
 import ProductFilter from '@/components/ProductFilter.vue';
-import { products } from '@/data/products';
+import BasePreloader from '@/components/BasePreloader.vue';
+import BaseErrorLoading from '@/components/BaseErrorLoading.vue';
+import { loadProductsData } from '@/api/products';
 
 export default {
   data() {
@@ -40,47 +42,81 @@ export default {
       filterPriceTo: 0,
       filterCategoryId: 0,
       filterColor: 'none',
+      productsData: null,
+      isProductLoading: false,
+      hasErrorLoading: false,
     };
   },
   components: {
+    BaseErrorLoading,
+    BasePreloader,
     ProductList,
     BasePagination,
     ProductFilter,
   },
   computed: {
-    filteredProducts() {
-      let filteredProducts = products;
-
-      if (this.filterPriceFrom > 0) {
-        filteredProducts = filteredProducts.filter((product) => product.price >= this.filterPriceFrom);
-      }
-
-      if (this.filterPriceTo > 0) {
-        filteredProducts = filteredProducts.filter((product) => product.price <= this.filterPriceTo);
-      }
-
-      if (this.filterCategoryId) {
-        filteredProducts = filteredProducts.filter((product) => product.categoryId === this.filterCategoryId);
-      }
-
-      if (this.filterColor !== 'none') {
-        filteredProducts = filteredProducts.filter((product) => product.color === this.filterColor);
-      }
-
-      return filteredProducts;
-    },
     products() {
-      const offset = (this.page - 1) * this.productsPerPage;
-
-      return this.filteredProducts.slice(offset, offset + this.productsPerPage);
+      return this.productsData
+        ? this.productsData.items.map((product) => ({
+          ...product,
+          image: product.image.file.url,
+        }))
+        : [];
     },
     countProducts() {
-      return this.filteredProducts.length;
+      return this.productsData ? this.productsData.pagination.total : 0;
     },
+  },
+  methods: {
+    loadProducts() {
+      this.isProductLoading = true;
+      this.hasErrorLoading = false;
+      clearTimeout(this.loadProductsTimer);
+      this.loadProductsTimer = setTimeout(async () => {
+        try {
+          const { data } = await loadProductsData({
+            page: this.page,
+            limit: this.productsPerPage,
+            categoryId: this.filterCategoryId,
+            minPrice: this.filterPriceFrom,
+            maxPrice: this.filterPriceTo,
+            colorId: this.filterColor,
+          });
+
+          this.productsData = data;
+        } catch (error) {
+          this.hasErrorLoading = true;
+        } finally {
+          this.isProductLoading = false;
+        }
+      }, 1000);
+    },
+  },
+  watch: {
+    page() {
+      this.loadProducts();
+    },
+    filterPriceFrom() {
+      this.loadProducts();
+    },
+    filterPriceTo() {
+      this.loadProducts();
+    },
+    filterCategoryId() {
+      this.loadProducts();
+    },
+    filterColor() {
+      this.loadProducts();
+    },
+  },
+  created() {
+    this.loadProducts();
   },
 };
 </script>
 
 <style scoped>
-
+.catalog {
+  position: relative;
+}
 </style>

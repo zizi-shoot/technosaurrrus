@@ -8,22 +8,10 @@
     </h3>
     <span class="catalog__price">{{ product.price | formatNumber }} ₽</span>
     <ul class="colors colors--black">
-      <li class="colors__item">
+      <li v-for="color in product.colors" :key="color.id" class="colors__item">
         <label class="colors__label">
-          <input v-model="color" class="colors__radio sr-only" type="radio" value="#73b6ea">
-          <span class="colors__value" style="background-color: #73b6ea;"></span>
-        </label>
-      </li>
-      <li class="colors__item">
-        <label class="colors__label">
-          <input v-model="color" class="colors__radio sr-only" type="radio" value="8be000">
-          <span class="colors__value" style="background-color: #8be000;"></span>
-        </label>
-      </li>
-      <li class="colors__item">
-        <label class="colors__label">
-          <input v-model="color" class="colors__radio sr-only" type="radio" value="#222">
-          <span class="colors__value" style="background-color: #222;"></span>
+          <input v-model="colorValue" :value="color.id" class="colors__radio sr-only" type="radio">
+          <span :style="{backgroundColor: color.code}" class="colors__value"></span>
         </label>
       </li>
     </ul>
@@ -36,7 +24,7 @@ import { formatNumber } from '@/helpers';
 export default {
   data() {
     return {
-      color: '#73b6ea',
+      colorValue: this.product.colors[0].id,
     };
   },
   props: ['product'],

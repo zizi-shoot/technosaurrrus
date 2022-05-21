@@ -34,103 +34,10 @@
               <span class="colors__value" style="background: url('img/empty-filter.png') center/contain;"></span>
             </label>
           </li>
-          <li class="colors__item">
+          <li v-for="color in colors" :key="color.id" class="colors__item">
             <label class="colors__label">
-              <input v-model="currentColor" checked="" class="colors__radio sr-only" type="radio" value="blue">
-              <span class="colors__value" style="background-color: #73b6ea;">
-                  </span>
-            </label>
-          </li>
-          <li class="colors__item">
-            <label class="colors__label">
-              <input v-model="currentColor" class="colors__radio sr-only" type="radio" value="multi">
-              <span class="colors__value"
-                    style="background: linear-gradient(130deg, rgba(255,0,0,1) 15%, rgba(0,255,0,1) 50%, rgba(0,0,255,1) 85%);"
-              ></span>
-            </label>
-          </li>
-          <li class="colors__item">
-            <label class="colors__label">
-              <input v-model="currentColor" class="colors__radio sr-only" type="radio" value="green">
-              <span class="colors__value" style="background-color: #8be000;">
-                </span></label>
-          </li>
-          <li class="colors__item">
-            <label class="colors__label">
-              <input v-model="currentColor" class="colors__radio sr-only" type="radio" value="red">
-              <span class="colors__value" style="background-color: #f00;">
-                </span></label>
-          </li>
-          <li class="colors__item">
-            <label class="colors__label">
-              <input v-model="currentColor" class="colors__radio sr-only" type="radio" value="white">
-              <span class="colors__value" style="background-color: #fff;">
-                </span></label>
-          </li>
-          <li class="colors__item">
-            <label class="colors__label">
-              <input v-model="currentColor" class="colors__radio sr-only" type="radio" value="black">
-              <span class="colors__value" style="background-color: #000;">
-                </span></label>
-          </li>
-        </ul>
-      </fieldset>
-
-      <fieldset class="form__block">
-        <legend class="form__legend">Объем в ГБ</legend>
-        <ul class="check-list">
-          <li class="check-list__item">
-            <label class="check-list__label">
-              <input checked="" class="check-list__check sr-only" name="volume" type="checkbox" value="8">
-              <span class="check-list__desc">
-                    8
-                    <span>(313)</span>
-                  </span>
-            </label>
-          </li>
-          <li class="check-list__item">
-            <label class="check-list__label">
-              <input class="check-list__check sr-only" name="volume" type="checkbox" value="16">
-              <span class="check-list__desc">
-                    16
-                    <span>(461)</span>
-                  </span>
-            </label>
-          </li>
-          <li class="check-list__item">
-            <label class="check-list__label">
-              <input class="check-list__check sr-only" name="volume" type="checkbox" value="32">
-              <span class="check-list__desc">
-                    32
-                    <span>(313)</span>
-                  </span>
-            </label>
-          </li>
-          <li class="check-list__item">
-            <label class="check-list__label">
-              <input class="check-list__check sr-only" name="volume" type="checkbox" value="64">
-              <span class="check-list__desc">
-                    64
-                    <span>(313)</span>
-                  </span>
-            </label>
-          </li>
-          <li class="check-list__item">
-            <label class="check-list__label">
-              <input class="check-list__check sr-only" name="volume" type="checkbox" value="128">
-              <span class="check-list__desc">
-                    128
-                    <span>(313)</span>
-                  </span>
-            </label>
-          </li>
-          <li class="check-list__item">
-            <label class="check-list__label">
-              <input class="check-list__check sr-only" name="volume" type="checkbox" value="264">
-              <span class="check-list__desc">
-                    264
-                    <span>(313)</span>
-                  </span>
+              <input v-model="currentColor" :value="color.id" class="colors__radio sr-only" type="radio">
+              <span :style="{backgroundColor: color.code}" class="colors__value"></span>
             </label>
           </li>
         </ul>
@@ -147,7 +54,7 @@
 </template>
 
 <script>
-import { categories } from '@/data/categories';
+import { loadCategoriesData, loadColorsData } from '@/api/products';
 
 export default {
   data() {
@@ -156,12 +63,17 @@ export default {
       currentPriceTo: 0,
       currentCategoryId: 0,
       currentColor: 'none',
+      categoriesData: [],
+      colorsData: [],
     };
   },
   props: ['priceFrom', 'priceTo', 'categoryId', 'color'],
   computed: {
     categories() {
-      return categories;
+      return this.categoriesData ? this.categoriesData.items : [];
+    },
+    colors() {
+      return this.colorsData ? this.colorsData.items : [];
     },
   },
   methods: {
@@ -177,6 +89,14 @@ export default {
       this.$emit('update:categoryId', 0);
       this.$emit('update:color', 'none');
     },
+    async loadCategories() {
+      const { data } = await loadCategoriesData();
+      this.categoriesData = data;
+    },
+    async loadColors() {
+      const { data } = await loadColorsData();
+      this.colorsData = data;
+    },
   },
   watch: {
     priceFrom(value) {
@@ -188,6 +108,13 @@ export default {
     categoryId(value) {
       this.currentCategoryId = value;
     },
+    color(value) {
+      this.currentColor = value;
+    },
+  },
+  created() {
+    this.loadCategories();
+    this.loadColors();
   },
 };
 </script>
