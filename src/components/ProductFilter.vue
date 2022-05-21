@@ -54,8 +54,7 @@
 </template>
 
 <script>
-import axios from 'axios';
-import { API_URL } from '@/config';
+import { loadCategoriesData, loadColorsData } from '@/api/products';
 
 export default {
   data() {
@@ -91,11 +90,11 @@ export default {
       this.$emit('update:color', 'none');
     },
     async loadCategories() {
-      const { data } = await axios.get(`${API_URL}/productCategories`);
+      const { data } = await loadCategoriesData();
       this.categoriesData = data;
     },
     async loadColors() {
-      const { data } = await axios.get(`${API_URL}/colors`);
+      const { data } = await loadColorsData();
       this.colorsData = data;
     },
   },

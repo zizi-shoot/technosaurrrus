@@ -118,11 +118,10 @@
 <script>
 import { formatNumber, wait } from '@/helpers';
 import BaseCounter from '@/components/BaseCounter.vue';
-import axios from 'axios';
-import { API_URL } from '@/config';
 import BasePreloader from '@/components/BasePreloader.vue';
 import BaseErrorLoading from '@/components/BaseErrorLoading.vue';
 import { mapActions } from 'vuex';
+import { loadOneProductData } from '@/api/products';
 
 export default {
   components: { BaseErrorLoading, BasePreloader, BaseCounter },
@@ -178,7 +177,7 @@ export default {
       await wait(2000);
 
       try {
-        const { data } = await axios.get(`${API_URL}/products/${this.$route.params.id}`);
+        const { data } = await loadOneProductData(this.$route.params.id);
         this.productData = data;
         this.colorValue = data.colors[0].id;
       } catch (error) {

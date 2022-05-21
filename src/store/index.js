@@ -1,8 +1,9 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import axios from 'axios';
-import { API_URL } from '@/config';
 import { wait } from '@/helpers';
+import {
+  addProduct, deleteProduct, loadCartData, updateProduct,
+} from '@/api/cart';
 
 Vue.use(Vuex);
 
@@ -75,11 +76,7 @@ export default new Vuex.Store({
       await wait(2000);
 
       try {
-        const { data: { user, items } } = await axios.get(`${API_URL}/baskets`, {
-          params: {
-            userAccessKey: context.state.userAccessKey,
-          },
-        });
+        const { data: { user, items } } = await loadCartData({ userAccessKey: context.state.userAccessKey });
 
         if (!context.state.userAccessKey) {
           localStorage.setItem('userAccessKey', user.accessKey);
@@ -98,14 +95,10 @@ export default new Vuex.Store({
     async addProductToCart(context, { productId, amount }) {
       await wait(2000);
 
-      const { data: { items } } = await axios.post(`${API_URL}/baskets/products`, {
-        productId,
-        quantity: amount,
-      }, {
-        params: {
-          userAccessKey: context.state.userAccessKey,
-        },
-      });
+      const { data: { items } } = await addProduct(
+        { productId, quantity: amount },
+        { userAccessKey: context.state.userAccessKey },
+      );
 
       context.commit('updateCartProductsData', items);
       context.commit('syncCartProducts');
@@ -119,14 +112,10 @@ export default new Vuex.Store({
       await wait(300);
 
       try {
-        const { data: { items } } = await axios.put(`${API_URL}/baskets/products`, {
-          productId,
-          quantity: amount,
-        }, {
-          params: {
-            userAccessKey: context.state.userAccessKey,
-          },
-        });
+        const { data: { items } } = await updateProduct(
+          { productId, quantity: amount },
+          { userAccessKey: context.state.userAccessKey },
+        );
 
         context.commit('updateCartProductsData', items);
       } catch (error) {
@@ -137,14 +126,10 @@ export default new Vuex.Store({
     async deleteCartProduct(context, productId) {
       await wait(1000);
 
-      const { data: { items } } = await axios.delete(`${API_URL}/baskets/products`, {
-        data: {
-          productId,
-        },
-        params: {
-          userAccessKey: context.state.userAccessKey,
-        },
-      });
+      const { data: { items } } = await deleteProduct(
+        { productId },
+        { userAccessKey: context.state.userAccessKey },
+      );
 
       context.commit('updateCartProductsData', items);
       context.commit('syncCartProducts');

@@ -29,10 +29,9 @@
 import BasePagination from '@/components/BasePagination.vue';
 import ProductList from '@/components/ProductList.vue';
 import ProductFilter from '@/components/ProductFilter.vue';
-import axios from 'axios';
-import { API_URL } from '@/config';
 import BasePreloader from '@/components/BasePreloader.vue';
 import BaseErrorLoading from '@/components/BaseErrorLoading.vue';
+import { loadProductsData } from '@/api/products';
 
 export default {
   data() {
@@ -75,19 +74,14 @@ export default {
       clearTimeout(this.loadProductsTimer);
       this.loadProductsTimer = setTimeout(async () => {
         try {
-          const { data } = await axios.get(
-            `${API_URL}/products`,
-            {
-              params: {
-                page: this.page,
-                limit: this.productsPerPage,
-                categoryId: this.filterCategoryId,
-                minPrice: this.filterPriceFrom,
-                maxPrice: this.filterPriceTo,
-                colorId: this.filterColor,
-              },
-            },
-          );
+          const { data } = await loadProductsData({
+            page: this.page,
+            limit: this.productsPerPage,
+            categoryId: this.filterCategoryId,
+            minPrice: this.filterPriceFrom,
+            maxPrice: this.filterPriceTo,
+            colorId: this.filterColor,
+          });
 
           this.productsData = data;
         } catch (error) {
