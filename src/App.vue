@@ -110,14 +110,14 @@
 
 <script>
 import CartIndicator from '@/components/CartIndicator.vue';
-import { mapActions, mapMutations } from 'vuex';
+import { mapActions, mapMutations, mapState } from 'vuex';
 import BasePreloader from '@/components/BasePreloader.vue';
 
 export default {
   computed: {
-    isCartLoading() {
-      return this.$store.state.isCartLoading;
-    },
+    ...mapState({
+      isCartLoading: 'isCartLoading',
+    }),
   },
   components: {
     BasePreloader,
@@ -153,7 +153,7 @@ export default {
   background-color: transparent;
 }
 
-.header__loader >>> svg{
+.header__loader >>> svg {
   width: 27px;
   height: 27px;
 }

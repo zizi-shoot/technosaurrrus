@@ -6,7 +6,7 @@
       </svg>
     </button>
     <!--eslint-disable-next-line-->
-    <input @change="changeAmount(+$event.target.value)" :value="amount" type="text">
+    <input :value="amount" type="text" @change="changeAmount(+$event.target.value)">
 
     <button aria-label="Добавить один товар" type="button" @click="changeAmount(1, 'plus')">
       <svg fill="currentColor" height="12" width="12">
@@ -20,17 +20,10 @@
 export default {
   props: ['amount'],
   methods: {
-    changeAmount(value, operator = null) {
-      switch (operator) {
-        case 'plus':
-          this.$emit('update:amount', this.amount + value);
-          break;
-        case 'minus':
-          this.$emit('update:amount', this.amount - value);
-          break;
-        default:
-          this.$emit('update:amount', value);
-      }
+    changeAmount(value, operator) {
+      if (!operator) this.$emit('update:amount', this.amount + value);
+      if (operator === 'plus') this.$emit('update:amount', this.amount + value);
+      if (operator === 'minus') this.$emit('update:amount', this.amount + value);
     },
   },
 };

@@ -64,8 +64,8 @@ export default {
       currentPriceTo: 0,
       currentCategoryId: 0,
       currentColor: 'none',
-      categoriesData: null,
-      colorsData: null,
+      categoriesData: [],
+      colorsData: [],
     };
   },
   props: ['priceFrom', 'priceTo', 'categoryId', 'color'],
