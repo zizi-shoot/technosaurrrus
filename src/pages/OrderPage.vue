@@ -86,12 +86,11 @@
 <script>
 import BaseFormText from '@/components/Base/BaseFormText.vue';
 import BaseFormTextarea from '@/components/Base/BaseFormTextarea.vue';
-import { API_URL } from '@/config';
-import axios from 'axios';
 import { mapGetters, mapMutations } from 'vuex';
 import { calcDeclination, formatNumber, wait } from '@/helpers';
 import OrderList from '@/pages/OrderList.vue';
 import BasePreloader from '@/components/Base/BasePreloader.vue';
+import { sendOrder } from '@/api/orders';
 
 export default {
   components: {
@@ -136,11 +135,7 @@ export default {
 
         await wait(2000);
 
-        const { data } = await axios.post(`${API_URL}/orders`, { ...this.formData }, {
-          params: {
-            userAccessKey: this.$store.state.userAccessKey,
-          },
-        });
+        const { data } = await sendOrder({ ...this.formData }, { userAccessKey: this.$store.state.userAccessKey });
 
         this.updateOrderInfo(data);
         this.resetCart();

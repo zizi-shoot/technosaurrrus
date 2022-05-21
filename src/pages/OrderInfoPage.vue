@@ -121,10 +121,10 @@ export default {
   },
   created() {
     this.orderInfo = this.$store.state.orderInfo;
-    this.isInfoLoading = true;
 
     if (this.$store.state.orderInfo?.id === this.$route.params.id) return;
 
+    this.isInfoLoading = true;
     this.loadOrderInfo(this.$route.params.id)
       .then(() => {
         this.orderInfo = this.$store.state.orderInfo;

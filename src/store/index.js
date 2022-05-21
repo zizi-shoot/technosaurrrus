@@ -2,8 +2,12 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import { wait } from '@/helpers';
 import {
-  addProduct, deleteProduct, loadCartData, updateProduct,
+  addProduct,
+  deleteProduct,
+  loadCartData,
+  updateProduct,
 } from '@/api/cart';
+import { loadOrder } from '@/api/orders';
 
 Vue.use(Vuex);
 
@@ -148,11 +152,7 @@ export default new Vuex.Store({
     async loadOrderInfo(context, orderId) {
       await wait(1000);
 
-      const { data } = await axios.get(`${API_URL}/orders/${orderId}`, {
-        params: {
-          userAccessKey: context.state.userAccessKey,
-        },
-      });
+      const { data } = await loadOrder(orderId, { userAccessKey: context.state.userAccessKey });
 
       context.commit('updateOrderInfo', data);
     },

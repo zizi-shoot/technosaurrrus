@@ -123,7 +123,6 @@ import BaseErrorLoading from '@/components/Base/BaseErrorLoading.vue';
 import { mapActions } from 'vuex';
 import { loadOneProductData } from '@/api/products';
 
-
 export default {
   components: { BaseErrorLoading, BasePreloader, BaseCounter },
   data() {

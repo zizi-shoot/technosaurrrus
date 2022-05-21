@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapGetters, mapState } from 'vuex';
 import CartItem from '@/components/CartItem.vue';
 import { calcDeclination, formatNumber } from '@/helpers';
 import BasePreloader from '@/components/Base/BasePreloader.vue';
@@ -64,13 +64,10 @@ export default {
       totalPrice: 'cartTotalPrice',
       totalAmount: 'cartTotalAmount',
     }),
-    isCartLoading() {
-      return this.$store.state.isCartLoading;
-    },
-
-    hasErrorCartLoading() {
-      return this.$store.state.hasErrorCartLoading;
-    },
+    ...mapState({
+      isCartLoading: 'isCartLoading',
+      hasErrorCartLoading: 'hasErrorCartLoading',
+    }),
     amountDeclension() {
       return calcDeclination(this.totalAmount, ['товар', 'товара', 'товаров']);
     },
