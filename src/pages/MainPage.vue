@@ -26,13 +26,13 @@
 </template>
 
 <script>
-import BasePagination from '@/components/BasePagination.vue';
+import BasePagination from '@/components/Base/BasePagination.vue';
 import ProductList from '@/components/ProductList.vue';
 import ProductFilter from '@/components/ProductFilter.vue';
 import axios from 'axios';
 import { API_URL } from '@/config';
-import BasePreloader from '@/components/BasePreloader.vue';
-import BaseErrorLoading from '@/components/BaseErrorLoading.vue';
+import BasePreloader from '@/components/Base/BasePreloader.vue';
+import BaseErrorLoading from '@/components/Base/BaseErrorLoading.vue';
 
 export default {
   data() {

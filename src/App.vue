@@ -3,9 +3,9 @@
     <header class="header">
       <div class="header__wrapper container">
         <span class="header__info">Каталог</span>
-        <a class="header__logo" href="#">
+        <router-link :to="{ name: 'main' }" class="header__logo">
           <img alt="Логотип интернет магазина Технозавррр" height="33" src="img/svg/logo-tech.svg" width="190">
-        </a>
+        </router-link>
         <a class="header__tel" href="tel:8 800 600 90 09">
           8 800 600 90 09
         </a>
@@ -111,7 +111,7 @@
 <script>
 import CartIndicator from '@/components/CartIndicator.vue';
 import { mapActions, mapMutations } from 'vuex';
-import BasePreloader from '@/components/BasePreloader.vue';
+import BasePreloader from '@/components/Base/BasePreloader.vue';
 
 export default {
   computed: {
@@ -153,7 +153,7 @@ export default {
   background-color: transparent;
 }
 
-.header__loader >>> svg{
+.header__loader >>> svg {
   width: 27px;
   height: 27px;
 }

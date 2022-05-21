@@ -117,11 +117,11 @@
 
 <script>
 import { formatNumber, wait } from '@/helpers';
-import BaseCounter from '@/components/BaseCounter.vue';
+import BaseCounter from '@/components/Base/BaseCounter.vue';
 import axios from 'axios';
 import { API_URL } from '@/config';
-import BasePreloader from '@/components/BasePreloader.vue';
-import BaseErrorLoading from '@/components/BaseErrorLoading.vue';
+import BasePreloader from '@/components/Base/BasePreloader.vue';
+import BaseErrorLoading from '@/components/Base/BaseErrorLoading.vue';
 import { mapActions } from 'vuex';
 
 export default {
