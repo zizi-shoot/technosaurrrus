@@ -101,7 +101,7 @@
         </ul>
 
         <span class="footer__copyright">
-        © 2020 Технозавррр
+        © 2022 Технозавррр
       </span>
       </div>
     </footer>

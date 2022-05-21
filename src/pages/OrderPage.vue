@@ -23,7 +23,7 @@
         Корзина
       </h1>
       <span class="content__info">
-        3 товара
+        {{ totalAmount }} {{ amountDeclension }}
       </span>
     </div>
 
@@ -67,22 +67,11 @@
         </div>
 
         <div class="cart__block">
-          <ul class="cart__orders">
-            <li v-for="product of orderProducts" :key="product.id" class="cart__order">
-              <h3>{{ product.title }}</h3>
-              <b>{{ product.price * product.quantity | formatNumber }} ₽</b>
-              <span>Артикул: {{ product.id }}</span>
-            </li>
-          </ul>
+          <OrderList :products="orderProducts" :total-amount="totalAmount" :total-price="totalPrice" />
 
-          <div class="cart__total">
-            <p>Доставка: <b>500 ₽</b></p>
-            <p>Итого: <b>{{ totalAmount }}</b> {{ amountDeclension(totalAmount) }} на сумму
-              <b>{{ totalPrice | formatNumber }} ₽</b></p>
-          </div>
-
-          <button class="cart__button button button--primary" type="submit">
-            Оформить заказ
+          <button :disabled="isOrderSending" class="cart__button button button--primary" type="submit">
+            <BasePreloader v-if="isOrderSending" class="button__loader" />
+            <span v-else>Оформить заказ</span>
           </button>
         </div>
         <div v-if="formErrorMessage" class="cart__error form__error-block">
@@ -100,15 +89,20 @@ import BaseFormTextarea from '@/components/Base/BaseFormTextarea.vue';
 import { API_URL } from '@/config';
 import axios from 'axios';
 import { mapGetters, mapMutations } from 'vuex';
-import { calcDeclination, formatNumber } from '@/helpers';
+import { calcDeclination, formatNumber, wait } from '@/helpers';
+import OrderList from '@/pages/OrderList.vue';
+import BasePreloader from '@/components/Base/BasePreloader.vue';
 
 export default {
-  components: { BaseFormTextarea, BaseFormText },
+  components: {
+    BasePreloader, OrderList, BaseFormTextarea, BaseFormText,
+  },
   data() {
     return {
       formData: {},
       formError: {},
       formErrorMessage: '',
+      isOrderSending: false,
     };
   },
   computed: {
@@ -124,32 +118,39 @@ export default {
         quantity,
       }));
     },
+    amountDeclension() {
+      return calcDeclination(this.totalAmount, ['товар', 'товара', 'товаров']);
+    },
   },
   filters: {
     formatNumber,
   },
   methods: {
-    ...mapMutations(['resetCart']),
-
-    amountDeclension(value) {
-      return calcDeclination(value, ['товар', 'товара', 'товаров']);
-    },
+    ...mapMutations(['resetCart', 'updateOrderInfo']),
 
     async order() {
       try {
         this.formError = {};
         this.formErrorMessage = '';
+        this.isOrderSending = true;
 
-        await axios.post(`${API_URL}/orders`, { ...this.formData }, {
+        await wait(2000);
+
+        const { data } = await axios.post(`${API_URL}/orders`, { ...this.formData }, {
           params: {
             userAccessKey: this.$store.state.userAccessKey,
           },
         });
 
+        this.updateOrderInfo(data);
         this.resetCart();
+
+        await this.$router.push({ name: 'orderInfo', params: { id: data.id } });
       } catch ({ response }) {
         this.formError = response.data.error.request || {};
         this.formErrorMessage = response.data.error.message;
+      } finally {
+        this.isOrderSending = false;
       }
     },
   },
@@ -157,5 +158,12 @@ export default {
 </script>
 
 <style scoped>
+.button {
+  position: relative;
+  height: 69px;
+}
 
+.button__loader {
+  background-color: transparent;
+}
 </style>
