@@ -43,6 +43,11 @@ export default new Vuex.Store({
     updateHasErrorCartLoading(state, value) {
       state.hasErrorCartLoading = value;
     },
+
+    resetCart(state) {
+      state.cartProducts = [];
+      state.cartProductsData = [];
+    },
   },
   getters: {
     cartDetailProducts(state) {

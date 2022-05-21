@@ -28,7 +28,7 @@
     </div>
 
     <section class="cart">
-      <form action="#" class="cart__form form" method="POST">
+      <form action="#" class="cart__form form" @submit.prevent="order">
         <div class="cart__field">
           <div class="cart__data">
             <BaseFormText
@@ -48,7 +48,7 @@
               :error="formError.phone"
               placeholder="Введите ваш телефон"
               title="Телефон"
-              type="phone"
+              type="tel"
             />
             <BaseFormText
               v-model="formData.email"
@@ -90,15 +90,13 @@
             <p>Итого: <b>3</b> товара на сумму <b>37 970 ₽</b></p>
           </div>
 
-          <button class="cart__button button button--primery" type="submit">
+          <button class="cart__button button button--primary" type="submit">
             Оформить заказ
           </button>
         </div>
-        <div class="cart__error form__error-block">
+        <div v-if="formErrorMessage" class="cart__error form__error-block">
           <h4>Заявка не отправлена!</h4>
-          <p>
-            Похоже произошла ошибка. Попробуйте отправить снова или перезагрузите страницу.
-          </p>
+          <p>{{ formErrorMessage }}</p>
         </div>
       </form>
     </section>
@@ -108,6 +106,9 @@
 <script>
 import BaseFormText from '@/components/Base/BaseFormText.vue';
 import BaseFormTextarea from '@/components/Base/BaseFormTextarea.vue';
+import { API_URL } from '@/config';
+import axios from 'axios';
+import { mapMutations } from 'vuex';
 
 export default {
   components: { BaseFormTextarea, BaseFormText },
@@ -115,7 +116,28 @@ export default {
     return {
       formData: {},
       formError: {},
+      formErrorMessage: '',
     };
+  },
+  methods: {
+    ...mapMutations(['resetCart']),
+    async order() {
+      try {
+        this.formError = {};
+        this.formErrorMessage = '';
+
+        await axios.post(`${API_URL}/orders`, { ...this.formData }, {
+          params: {
+            userAccessKey: this.$store.state.userAccessKey,
+          },
+        });
+
+        this.resetCart();
+      } catch ({ response }) {
+        this.formError = response.data.error.request || {};
+        this.formErrorMessage = response.data.error.message;
+      }
+    },
   },
 };
 </script>
