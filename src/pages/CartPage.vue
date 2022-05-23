@@ -17,7 +17,7 @@
     </div>
 
     <BasePreloader v-if="isCartLoading" />
-    <BaseErrorLoading v-else-if="hasErrorCartLoading" descr="Не удалось загрузить товары из корзины" @load-again="loadCart"/>
+    <BaseErrorLoading v-else-if="hasErrorCartLoading" descr="Не удалось загрузить товары из корзины" @load-again="loadCart" />
 
     <section v-else class="cart">
       <form action="#" class="cart__form form" method="POST">
@@ -33,9 +33,15 @@
           </p>
           <p class="cart__price">Итого: <span>{{ totalPrice | formatNumber }} ₽</span></p>
 
-          <button class="cart__button button button--primary" type="submit">
+          <router-link
+            :disabled="!products.length"
+            :to="{name: 'order'}"
+            class="cart__button button button--primary"
+            tag="button"
+            type="submit"
+          >
             Оформить заказ
-          </button>
+          </router-link>
         </div>
       </form>
     </section>
@@ -43,11 +49,11 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapGetters, mapState } from 'vuex';
 import CartItem from '@/components/CartItem.vue';
 import { calcDeclination, formatNumber } from '@/helpers';
-import BasePreloader from '@/components/BasePreloader.vue';
-import BaseErrorLoading from '@/components/BaseErrorLoading.vue';
+import BasePreloader from '@/components/Base/BasePreloader.vue';
+import BaseErrorLoading from '@/components/Base/BaseErrorLoading.vue';
 
 export default {
   components: { BaseErrorLoading, BasePreloader, CartItem },
@@ -58,13 +64,10 @@ export default {
       totalPrice: 'cartTotalPrice',
       totalAmount: 'cartTotalAmount',
     }),
-    isCartLoading() {
-      return this.$store.state.isCartLoading;
-    },
-
-    hasErrorCartLoading() {
-      return this.$store.state.hasErrorCartLoading;
-    },
+    ...mapState({
+      isCartLoading: 'isCartLoading',
+      hasErrorCartLoading: 'hasErrorCartLoading',
+    }),
     amountDeclension() {
       return calcDeclination(this.totalAmount, ['товар', 'товара', 'товаров']);
     },

@@ -117,9 +117,9 @@
 
 <script>
 import { formatNumber, wait } from '@/helpers';
-import BaseCounter from '@/components/BaseCounter.vue';
-import BasePreloader from '@/components/BasePreloader.vue';
-import BaseErrorLoading from '@/components/BaseErrorLoading.vue';
+import BaseCounter from '@/components/Base/BaseCounter.vue';
+import BasePreloader from '@/components/Base/BasePreloader.vue';
+import BaseErrorLoading from '@/components/Base/BaseErrorLoading.vue';
 import { mapActions } from 'vuex';
 import { loadOneProductData } from '@/api/products';
 

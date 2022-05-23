@@ -2,8 +2,12 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import { wait } from '@/helpers';
 import {
-  addProduct, deleteProduct, loadCartData, updateProduct,
+  addProduct,
+  deleteProduct,
+  loadCartData,
+  updateProduct,
 } from '@/api/cart';
+import { loadOrder } from '@/api/orders';
 
 Vue.use(Vuex);
 
@@ -14,6 +18,7 @@ export default new Vuex.Store({
     cartProductsData: [],
     isCartLoading: false,
     hasErrorCartLoading: false,
+    orderInfo: null,
   },
   mutations: {
     updateCartProductAmount(state, { productId, amount }) {
@@ -43,6 +48,15 @@ export default new Vuex.Store({
 
     updateHasErrorCartLoading(state, value) {
       state.hasErrorCartLoading = value;
+    },
+
+    resetCart(state) {
+      state.cartProducts = [];
+      state.cartProductsData = [];
+    },
+
+    updateOrderInfo(state, orderInfo) {
+      state.orderInfo = orderInfo;
     },
   },
   getters: {
@@ -134,5 +148,14 @@ export default new Vuex.Store({
       context.commit('updateCartProductsData', items);
       context.commit('syncCartProducts');
     },
+
+    async loadOrderInfo(context, orderId) {
+      await wait(1000);
+
+      const { data } = await loadOrder(orderId, { userAccessKey: context.state.userAccessKey });
+
+      context.commit('updateOrderInfo', data);
+    },
   },
+
 });
